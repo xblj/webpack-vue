@@ -6,6 +6,7 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const notifier = require('node-notifier');
 const devConfig = require('../config/dev');
 const baseWebpackConfig = require('./webpack.base.config');
 
@@ -24,7 +25,7 @@ let devWebpackConfig = merge(baseWebpackConfig, {
     port: devConfig.port,
     historyApiFallback: true,
     // 不会输出编译信息，通过FriendlyErrorsPlugin输出编译信息
-    quiet: true,
+    quiet: true
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -47,18 +48,16 @@ let devWebpackConfig = merge(baseWebpackConfig, {
       compilationSuccessInfo: {
         messages: [`Your application is running here: http://loaclhost:${devConfig.port}`]
       },
-      onErrors: function(){
-        return (severity, errors) => {
-          if (severity !== 'error') return
-          const error = errors[0]
-          const filename = error.file && error.file.split('!').pop()
-          notifier.notify({
-            title: packageConfig.name,
-            message: severity + ': ' + error.name,
-            subtitle: filename || '',
-            icon: path.join(__dirname, 'logo.png')
-          })
-        }
+      onErrors: function(severity, errors) {
+        console.log(severity)
+        if (severity !== 'error') return;
+        const error = errors[0];
+        const filename = error.file && error.file.split('!').pop();
+        notifier.notify({
+          title: 'vue-webpack-cli',
+          message: severity + ': ' + error.name,
+          subtitle: filename || '',
+        });
       }
     })
   ]
