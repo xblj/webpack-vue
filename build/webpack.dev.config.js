@@ -46,10 +46,10 @@ let devWebpackConfig = merge(baseWebpackConfig, {
     ]),
     new FriendlyErrorsPlugin({
       compilationSuccessInfo: {
-        messages: [`Your application is running here: http://loaclhost:${devConfig.port}`]
+        messages: [`Your application is running here: http://localhost:${devConfig.port}`]
       },
       onErrors: function(severity, errors) {
-        console.log(severity)
+        console.log( errors[0])
         if (severity !== 'error') return;
         const error = errors[0];
         const filename = error.file && error.file.split('!').pop();
